@@ -74,39 +74,39 @@ AVX_COUNT=$(\
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TOTAL_PERCENT=$(\
-    bc <<<"100.0 * $TOTAL_COUNT / $TOTAL_COUNT" \
+    bc <<<"scale=2; 100.0 * $TOTAL_COUNT / $TOTAL_COUNT" \
 )
 
 SSE_PERCENT=$(\
-    bc <<<"100.0 * $SSE_COUNT / $TOTAL_COUNT" \
+    bc <<<"scale=2; 100.0 * $SSE_COUNT / $TOTAL_COUNT" \
 )
 
 SSE_PACKED_PERCENT=$(\
-    bc <<<"100.0 * $SSE_PACKED_COUNT / $TOTAL_COUNT" \
+    bc <<<"scale=2; 100.0 * $SSE_PACKED_COUNT / $TOTAL_COUNT" \
 )
 
 SSE2_PERCENT=$(\
-    bc <<<"100.0 * $SSE2_COUNT / $TOTAL_COUNT" \
+    bc <<<"scale=2; 100.0 * $SSE2_COUNT / $TOTAL_COUNT" \
 )
 
 SSE2_PACKED_PERCENT=$(\
-    bc <<<"100.0 * $SSE2_PACKED_COUNT / $TOTAL_COUNT" \
+    bc <<<"scale=2; 100.0 * $SSE2_PACKED_COUNT / $TOTAL_COUNT" \
 )
 
 SSE3_PERCENT=$(\
-    bc <<<"100.0 * $SSE3_COUNT / $TOTAL_COUNT" \
+    bc <<<"scale=2; 100.0 * $SSE3_COUNT / $TOTAL_COUNT" \
 )
 
 SSSE3_PERCENT=$(\
-    bc <<<"100.0 * $SSSE3_COUNT / $TOTAL_COUNT" \
+    bc <<<"scale=2; 100.0 * $SSSE3_COUNT / $TOTAL_COUNT" \
 )
 
 SSE4_PERCENT=$(\
-    bc <<<"100.0 * $SSE4_COUNT / $TOTAL_COUNT" \
+    bc <<<"scale=2; 100.0 * $SSE4_COUNT / $TOTAL_COUNT" \
 )
 
 AVX_PERCENT=$(\
-    bc <<<"100.0 * $AVX_COUNT / $TOTAL_COUNT" \
+    bc <<<"scale=2; 100.0 * $AVX_COUNT / $TOTAL_COUNT" \
 )
 
 
