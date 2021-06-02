@@ -1,40 +1,41 @@
 #ifndef RAY_BBOX_INTERSECTIONS_RAY_H
 #define RAY_BBOX_INTERSECTIONS_RAY_H
 
+#include <array>
 #include "vector3.h"
 
 class Ray {
 private:
-    Vector3 origin, direction,
+    Vector3 o, d;
 
-    Vector3 inv_direction;
-    int sign[3];
+    Vector3 inv{0, 0, 0};
+    std::array<int, 3> s;
 
 public:
 
-    Ray(const Vector3 &origin, const Vector3 &direction) : origin(origin), direction(direction) {
+    Ray(const Vector3 &origin, const Vector3 &direction) : o(origin), d(direction) {
 
-        inv_direction = {
+        inv = {
                 1 / direction.x(),
                 1 / direction.y(),
                 1 / direction.z()
         };
 
-        sign = {
-                inv_direction.x() < 0,
-                inv_direction.y() < 0,
-                inv_direction.z() < 0
+        s = {
+                inv.x() < 0,
+                inv.y() < 0,
+                inv.z() < 0
         };
 
     }
 
-    const Vector3 &origin() { return origin };
+    [[nodiscard]] const Vector3 &origin() const { return o; };
 
-    const Vector3 &direction() { return direction };
+    [[nodiscard]] const Vector3 &direction() const { return d; };
 
-    const Vector3 &inv_direction() { return inv_direction };
+    [[nodiscard]] const Vector3 &inv_direction() const { return inv; };
 
-    const decltype(sign) &sign() { return sign }
+    [[nodiscard]] const decltype(s) &sign() const { return s; }
 
 };
 

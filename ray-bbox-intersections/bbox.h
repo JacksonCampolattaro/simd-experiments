@@ -8,19 +8,17 @@
 class BBox {
 private:
 
-    Vector3 bounds[2];
+    std::array<Vector3, 2> b;
 
 public:
 
-    BBox(const Vector3 &min, const Vector3 &max) {
+    BBox(const Vector3 &min, const Vector3 &max) : b{min, max} {
         assert(min.x() < max.x());
         assert(min.y() < max.y());
         assert(min.z() < max.z());
-
-        bounds = {min, max};
     }
 
-    const decltype(bounds) &bounds() { return bounds }
+    const decltype(b) &bounds() const { return b; }
 
 };
 
