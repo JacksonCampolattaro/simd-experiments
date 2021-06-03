@@ -6,6 +6,7 @@
 #include "ray.h"
 #include "bbox.h"
 #include "intersection_strategies/smits_method.h"
+#include "intersection_strategies/improved_method.h"
 
 int main() {
 
@@ -22,8 +23,8 @@ int main() {
 
     BBox bbox = {min, max};
 
+    auto t0 = -std::numeric_limits<double>::infinity();
+    auto t1 = std::numeric_limits<double>::infinity();
 
-    std::cout << intersect_smits_method(bbox, ray,
-                                        -std::numeric_limits<double>::infinity(),
-                                        std::numeric_limits<double>::infinity());
+    std::cout << intersect_smits_method(bbox, ray, t0, t1) << intersect_improved_method(bbox, ray, t0, t1);
 }
