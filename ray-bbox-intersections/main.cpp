@@ -5,26 +5,37 @@
 #include "vector3.h"
 #include "ray.h"
 #include "bbox.h"
+
 #include "intersection_strategies/smits_method.h"
-#include "intersection_strategies/improved_method.h"
+#include "intersection_strategies/improved.h"
+#include "intersection_strategies/clarified.h"
 
 int main() {
 
     std::uniform_real_distribution<double> generator(0.000001, 1.0);
     auto re = std::default_random_engine(std::chrono::system_clock::now().time_since_epoch().count());
 
-    Vector3 origin = {generator(re), generator(re), generator(re)};
-    Vector3 direction = {origin.x() + generator(re), origin.y() + generator(re), origin.z() + generator(re)};
+    for (int i = 0; i < 1000; ++i) {
 
-    Ray ray = {origin, direction};
+        Vector3 origin = {generator(re), generator(re), generator(re)};
+        Vector3 direction = {origin.x() + generator(re), origin.y() + generator(re), origin.z() + generator(re)};
 
-    Vector3 min = {generator(re), generator(re), generator(re)};
-    Vector3 max = {min.x() + generator(re), min.y() + generator(re), min.z() + generator(re)};
+        Ray ray = {origin, direction};
 
-    BBox bbox = {min, max};
+        Vector3 min = {generator(re), generator(re), generator(re)};
+        Vector3 max = {min.x() + generator(re), min.y() + generator(re), min.z() + generator(re)};
 
-    auto t0 = -std::numeric_limits<double>::infinity();
-    auto t1 = std::numeric_limits<double>::infinity();
+        BBox bbox = {min, max};
 
-    std::cout << intersect_smits_method(bbox, ray, t0, t1) << intersect_improved_method(bbox, ray, t0, t1);
+        auto t0 = -std::numeric_limits<double>::infinity();
+        auto t1 = std::numeric_limits<double>::infinity();
+
+        bool smits_method = intersect_smits_method(bbox, ray, t0, t1);
+        bool improved = intersect_improved(bbox, ray, t0, t1);
+        bool clarified = intersect_clarified(bbox, ray, t0, t1);
+
+        std::cout << smits_method << improved << clarified << std::endl;
+
+        assert(smits_method == improved && smits_method == clarified);
+    }
 }
