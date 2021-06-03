@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <chrono>
+#include <algorithm>
 
 #include "vector3.h"
 #include "ray.h"
@@ -9,6 +10,7 @@
 #include "intersection_strategies/smits_method.h"
 #include "intersection_strategies/improved.h"
 #include "intersection_strategies/clarified.h"
+#include "intersection_strategies/branchless.h"
 
 int main() {
 
@@ -33,9 +35,10 @@ int main() {
         bool smits_method = intersect_smits_method(bbox, ray, t0, t1);
         bool improved = intersect_improved(bbox, ray, t0, t1);
         bool clarified = intersect_clarified(bbox, ray, t0, t1);
+        bool branchless = intersect_branchless(bbox, ray, t0, t1);
 
-        std::cout << smits_method << improved << clarified << std::endl;
+        std::cout << smits_method << improved << clarified << branchless << std::endl;
 
-        assert(smits_method == improved && smits_method == clarified);
+        assert(smits_method == improved && smits_method == clarified && smits_method == branchless);
     }
 }
