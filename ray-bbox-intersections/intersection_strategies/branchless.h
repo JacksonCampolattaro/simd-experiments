@@ -19,7 +19,7 @@ bool intersect_branchless(const BBox &bbox, const Ray &ray, float rmin, float rm
     double min = std::max({xmin, ymin, zmin});
     double max = std::min({xmax, ymax, zmax});
 
-    // The ray intercepts if this region overlaps with the bounds provided
+    // The ray intercepts if this region overlaps with the interval provided
     return (max > min) && (min < rmax) && (max > rmin);
 }
 
