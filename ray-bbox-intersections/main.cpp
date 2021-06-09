@@ -13,6 +13,11 @@
 #include "intersection_strategies/clarified.h"
 #include "intersection_strategies/branchless.h"
 
+using std::chrono::high_resolution_clock;
+using std::chrono::duration_cast;
+using std::chrono::duration;
+typedef std::chrono::microseconds time_unit;
+
 std::vector<std::pair<Ray, BBox>> load_scenarios(std::ifstream &file, long N) {
   std::vector<std::pair<Ray, BBox>> scenarios;
 
@@ -58,6 +63,7 @@ int main() {
   // Sum up results, to prevent them from being optimized-out
   long sum = 0;
 
+  auto start = high_resolution_clock::now();
   for (int i = 0; i < R; ++i) {
 
     for (const auto &scenario : scenarios) {
@@ -65,11 +71,16 @@ int main() {
       const auto &ray = scenario.first;
       const auto &bbox = scenario.second;
 
-      sum += intersect_smits_method(bbox, ray, t0, t1);
+//      sum += intersect_smits_method(bbox, ray, t0, t1);
 //      sum += intersect_improved(bbox, ray, t0, t1);
-//      sum += intersect_clarified(bbox, ray, t0, t1);
+      sum += intersect_clarified(bbox, ray, t0, t1);
 //      sum += intersect_branchless(bbox, ray, t0, t1);
     }
   }
-  std::cout << (float) sum / (float) (scenarios.size() * R);
+  auto end = high_resolution_clock::now();
+
+  std::cout << (float) sum / (float) (scenarios.size() * R) << std::endl;
+
+  duration<double, std::milli> computation_time_ms = end - start;
+  std::cout << computation_time_ms.count() << "ms" << std::endl;
 }
