@@ -13,9 +13,9 @@ private:
 public:
 
     BBox(const Vector3 &min, const Vector3 &max) : b{min, max} {
-        assert(min.x() < max.x());
-        assert(min.y() < max.y());
-        assert(min.z() < max.z());
+        assert(min.x() <= max.x());
+        assert(min.y() <= max.y());
+        assert(min.z() <= max.z());
     }
 
     const decltype(b) &bounds() const { return b; }
