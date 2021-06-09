@@ -45,7 +45,7 @@ std::vector<BBox> generate_boxes(long N) {
 int main() {
 
     long N = 100;
-    long R = 100;
+    long R = 10000;
 
     auto boxes = generate_boxes(N);
     auto rays = generate_rays(N);
@@ -58,9 +58,9 @@ int main() {
         for (const auto &bbox : boxes) {
             for (const auto &ray : rays) {
                 sum += intersect_smits_method(bbox, ray, t0, t1);
-//                sum += intersect_improved(bbox, ray, t0, t1);
-//                sum += intersect_clarified(bbox, ray, t0, t1);
-//                sum += intersect_branchless(bbox, ray, t0, t1);
+                sum += intersect_improved(bbox, ray, t0, t1);
+                sum += intersect_clarified(bbox, ray, t0, t1);
+                sum += intersect_branchless(bbox, ray, t0, t1);
             }
         }
     }

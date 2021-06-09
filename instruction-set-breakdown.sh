@@ -8,10 +8,11 @@ set -euo pipefail
 
 # The first argument is the file to analyze
 BIN_FILE=$1
+FUNC_NAME=${2:-all}
 
 # Decompile the bin file
 ASM_FILE="$BIN_FILE.asm"
-objdump -d "$BIN_FILE" > "$ASM_FILE"
+objdump --demangle --disassemble="$FUNC_NAME" "$BIN_FILE" > "$ASM_FILE"
 
 
 # Determine the count of each type of instruction
@@ -113,13 +114,22 @@ AVX_PERCENT=$(\
 # Print out a table in a readable format
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-echo "Instruction Set | Count | Percent"
-echo "All             | $TOTAL_COUNT | $TOTAL_PERCENT"
-echo "SSE             | $SSE_COUNT | $SSE_PERCENT"
-echo "SSE (Packed)    | $SSE_PACKED_COUNT | $SSE_PACKED_PERCENT"
-echo "SSE2            | $SSE2_COUNT | $SSE2_PERCENT"
-echo "SSE2 (Packed)   | $SSE2_PACKED_COUNT | $SSE2_PACKED_PERCENT"
-echo "SSE3            | $SSE3_COUNT | $SSE3_PERCENT"
-echo "SSSE3           | $SSSE3_COUNT | $SSSE3_PERCENT"
-echo "SSE4            | $SSE4_COUNT | $SSE4_PERCENT"
-echo "AVX             | $AVX_COUNT | $AVX_PERCENT"
+echo "! Instruction Set !! Count !! Percent"
+echo "|-"
+echo "| All             || $TOTAL_COUNT || $TOTAL_PERCENT"
+echo "|-"
+echo "| SSE             || $SSE_COUNT || $SSE_PERCENT"
+echo "|-"
+echo "| SSE (Packed)    || $SSE_PACKED_COUNT || $SSE_PACKED_PERCENT"
+echo "|-"
+echo "| SSE2            || $SSE2_COUNT || $SSE2_PERCENT"
+echo "|-"
+echo "| SSE2 (Packed)   || $SSE2_PACKED_COUNT || $SSE2_PACKED_PERCENT"
+echo "|-"
+echo "| SSE3            || $SSE3_COUNT || $SSE3_PERCENT"
+echo "|-"
+echo "| SSSE3           || $SSSE3_COUNT || $SSSE3_PERCENT"
+echo "|-"
+echo "| SSE4            || $SSE4_COUNT || $SSE4_PERCENT"
+echo "|-"
+echo "| AVX             || $AVX_COUNT || $AVX_PERCENT"
