@@ -3,7 +3,6 @@
 #include <chrono>
 #include <algorithm>
 #include <fstream>
-#include <filesystem>
 
 #include "vector3.h"
 #include "ray.h"
@@ -14,39 +13,8 @@
 #include "intersection_strategies/clarified.h"
 #include "intersection_strategies/branchless.h"
 
-std::uniform_real_distribution<double> generator(0.000001, 1.0);
-auto re = std::default_random_engine(std::chrono::system_clock::now().time_since_epoch().count());
-
-std::vector<Ray> generate_rays(long N) {
-  std::vector<Ray> rays;
-
-  for (int i = 0; i < N; ++i) {
-
-    Vector3 origin = {generator(re), generator(re), generator(re)};
-    Vector3 direction = {origin.x() + generator(re), origin.y() + generator(re), origin.z() + generator(re)};
-
-    rays.emplace_back(origin, direction);
-  }
-  return rays;
-}
-
-std::vector<BBox> generate_boxes(long N) {
-  std::vector<BBox> boxes;
-
-  for (int i = 0; i < N; ++i) {
-
-    Vector3 min = {generator(re), generator(re), generator(re)};
-    Vector3 max = {min.x() + generator(re), min.y() + generator(re), min.z() + generator(re)};
-
-    boxes.emplace_back(min, max);
-  }
-
-  return boxes;
-}
-
 std::vector<std::pair<Ray, BBox>> load_scenarios(std::ifstream &file, long N) {
   std::vector<std::pair<Ray, BBox>> scenarios;
-  assert(file.is_open());
 
   double px, py, pz, qx, qy, qz,
           bxmin, bymin, bzmin, bxmax, bymax, bzmax;
@@ -75,7 +43,7 @@ std::vector<std::pair<Ray, BBox>> load_scenarios(std::ifstream &file, long N) {
 
 int main() {
 
-  long N = 100;
+  long N = 100000;
   long R = 10000;
 
   auto t0 = -std::numeric_limits<double>::infinity();
