@@ -16,7 +16,7 @@
 using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
-typedef std::chrono::microseconds time_unit;
+using std::chrono::milliseconds;
 
 std::vector<std::pair<Ray, BBox>> load_scenarios(std::ifstream &file, long N) {
   std::vector<std::pair<Ray, BBox>> scenarios;
@@ -46,41 +46,82 @@ std::vector<std::pair<Ray, BBox>> load_scenarios(std::ifstream &file, long N) {
   return scenarios;
 }
 
+double time(const std::function<void(void)> &f) {
+
+  auto start = high_resolution_clock::now();
+  {
+    f();
+  }
+  auto end = high_resolution_clock::now();
+
+  return (end - start).count();
+}
+
 int main() {
 
-  long N = 100000;
-  long R = 10000;
+  long N = 3742210;
+  long R = 10;
 
   auto t0 = -std::numeric_limits<double>::infinity();
   auto t1 = std::numeric_limits<double>::infinity();
 
   // Load test data
   auto file = std::ifstream(
-          "/home/jackcamp/Documents/simd-experiments/ray-bbox-intersections/data/remeshing_intersections_100000.txt");
+          "/home/jackcamp/Documents/simd-experiments/ray-bbox-intersections/data/remeshing_intersections_3742217.txt");
   if (!file.is_open()) exit(1);
   auto scenarios = load_scenarios(file, N);
 
-  // Sum up results, to prevent them from being optimized-out
-  long sum = 0;
+  std::vector<double> smits_method_times, improved_times, clarified_times, branchless_times;
 
-  auto start = high_resolution_clock::now();
   for (int i = 0; i < R; ++i) {
 
-    for (const auto &scenario : scenarios) {
+    long sum = 0;
 
-      const auto &ray = scenario.first;
-      const auto &bbox = scenario.second;
+    smits_method_times.push_back(time([&] {
+      for (const auto &scenario : scenarios) {
+        const auto &ray = scenario.first;
+        const auto &bbox = scenario.second;
+        sum += intersect_smits_method(bbox, ray, t0, t1);
+      }
+    }));
 
-//      sum += intersect_smits_method(bbox, ray, t0, t1);
-//      sum += intersect_improved(bbox, ray, t0, t1);
-      sum += intersect_clarified(bbox, ray, t0, t1);
-//      sum += intersect_branchless(bbox, ray, t0, t1);
-    }
+    improved_times.push_back(time([&] {
+      for (const auto &scenario : scenarios) {
+        const auto &ray = scenario.first;
+        const auto &bbox = scenario.second;
+        sum += intersect_improved(bbox, ray, t0, t1);
+      }
+    }));
+
+    clarified_times.push_back(time([&] {
+      for (const auto &scenario : scenarios) {
+        const auto &ray = scenario.first;
+        const auto &bbox = scenario.second;
+        sum += intersect_clarified(bbox, ray, t0, t1);
+      }
+    }));
+
+    branchless_times.push_back(time([&] {
+      for (const auto &scenario : scenarios) {
+        const auto &ray = scenario.first;
+        const auto &bbox = scenario.second;
+        sum += intersect_branchless(bbox, ray, t0, t1);
+      }
+    }));
+
+    std::cout << (float) sum / (float) (scenarios.size() * 4) << std::endl;
   }
-  auto end = high_resolution_clock::now();
 
-  std::cout << (float) sum / (float) (scenarios.size() * R) << std::endl;
-
-  duration<double, std::milli> computation_time_ms = end - start;
-  std::cout << computation_time_ms.count() << "ms" << std::endl;
+  std::cout << "Smits' Method:\t"
+            << std::accumulate(smits_method_times.begin(), smits_method_times.end(), 0.0) / (double) R << "ms"
+            << std::endl;
+  std::cout << "Improved:\t\t"
+            << std::accumulate(improved_times.begin(), improved_times.end(), 0.0) / (double) R << "ms"
+            << std::endl;
+  std::cout << "Clarified:\t\t"
+            << std::accumulate(clarified_times.begin(), clarified_times.end(), 0.0) / (double) R << "ms"
+            << std::endl;
+  std::cout << "Branchless:\t\t"
+            << std::accumulate(branchless_times.begin(), branchless_times.end(), 0.0) / (double) R << "ms"
+            << std::endl;
 }
